@@ -21,7 +21,7 @@ from flask import (
     send_from_directory,
     url_for,
 )
-from lxml.html.clean import clean_html
+from lxml.html.clean import Cleaner
 from werkzeug.utils import safe_join
 from wikmd import knowledge_graph
 from wikmd.cache import Cache
@@ -212,7 +212,10 @@ def get_html(file_page):
                                     format='md', extra_args=["--mathjax"], filters=['pandoc-xnos'])
 
     if html.strip():
-        html = clean_html(html)
+        # Audio/video "controls" attribute is not considered safe by lxml by default. Specify it as such.
+        safe_attrs = list(Cleaner.safe_attrs) + ["controls"]
+        cleaner = Cleaner(safe_attrs=safe_attrs)
+        html = cleaner.clean_html(html)
 
     for plugin in plugins:
         if "process_before_cache_html" in dir(plugin):

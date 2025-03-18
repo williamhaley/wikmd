@@ -16,11 +16,12 @@ wiki_directory: "wiki"
 wiki_title: "Wiki"
 homepage: "homepage.md"
 homepage_title: "homepage"
-images_route: "img"
-image_allowed_mime: ["image/gif", "image/jpeg", "image/png", "image/svg+xml", "image/webp"]
+images_route: "media"
+# Seems like any mime too could be specified. Might be better to have the config named "upload_allowed_mime" rather than "image_allowed_mime".
+image_allowed_mime: ["audio/mp4", "audio/x-m4a", "image/gif", "image/jpeg", "image/png", "image/svg+xml", "image/webp"]
 hide_folder_in_wiki: [".obsidian"]
 
-plugins: ["draw", "alerts", "mermaid", "embed-pages", "swagger", "plantuml"]
+plugins: ["draw", "alerts", "mermaid", "embed-pages", "stub", "swagger", "plantuml"]
 plantuml_server_url: "https://www.plantuml.com/plantuml"
 
 protect_edit_by_password: 0

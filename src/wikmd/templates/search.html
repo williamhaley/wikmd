@@ -60,8 +60,9 @@
 
 {% block content %}
     <h2>Found {{ num_results }} result(s) for '{{ search_term }}'</h2>
+    <h3>Create a <a href="{{ search_term }}">new article</a>?</h3>
     <p>
-        Did you mean?: 
+        Did you mean?:
         {% for term in suggestions %}
             <a href="{{ url_for('search_route') }}?q={{ term }}">{{ term }}</a>
         {% if not loop.last %}, {% endif %}

@@ -66,9 +66,12 @@ class ImageManager:
         # Don't delete .gitignore
         saved_images.discard(".gitkeep")
 
-        # Matches [*](/img/*) it does not matter if images_route is "/img" or "img"
-        image_link_pattern = fr"\[(.*?)\]\(({os.path.join('/', self.cfg.images_route)}.+?)\)"
-        image_link_regex = re.compile(image_link_pattern)
+        # Matches [*](/<images_route>/*) it does not matter if images_route is "/<images_route>" or "<images_route>"
+        markdown_image_link_pattern = fr"\[(.*?)\]\(({os.path.join('/', self.cfg.images_route)}.+?)\)"
+        # Matches src="(/<images_route>/*)" it does not matter if images_route is "/<images_route>" or "<images_route>"
+        html_image_link_pattern = fr".*src=\"({os.path.join('/', self.cfg.images_route)}.+?)\""
+        markdown_image_link_regex = re.compile(markdown_image_link_pattern)
+        html_image_link_regex = re.compile(html_image_link_pattern)
         used_images = set()
         # Searching for Markdown files
         for root, sub_dir, files in os.walk(self.cfg.wiki_directory):
@@ -83,8 +86,11 @@ class ImageManager:
                 try:
                     with open(path, "r", encoding="utf-8", errors="ignore") as f:
                         content = f.read()
-                        matches = image_link_regex.findall(content)
-                        for _caption, image_path in matches:
+                        markdown_matches = markdown_image_link_regex.findall(content)
+                        for _caption, image_path in markdown_matches:
+                            used_images.add(os.path.basename(image_path))
+                        html_matches = html_image_link_regex.findall(content)
+                        for image_path in html_matches:
                             used_images.add(os.path.basename(image_path))
                 except:
                     self.logger.info(f"ignoring {path}")
